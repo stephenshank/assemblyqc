@@ -1,32 +1,49 @@
-import json
+import csv
 
 import pysam
 
 
-def extract_positions_from_bam(input_bam, output_json):
+def extract_positions_from_bam(input_bam, output_csv):
+    output_file = open(output_csv, 'w')
+    csv_writer = csv.writer(output_file)
+    header = (
+        'name',
+        'read_index',
+        'mate_index',
+        'read_start',
+        'read_end',
+        'mate_start',
+        'mate_end'
+    )
+    csv_writer.writerow(header)
     af = pysam.AlignmentFile(input_bam)
     mate_hash = {}
-    location_dict = {}
     for read_index, read in enumerate(af.fetch()):
         if read.query_name in mate_hash:
             start, end, ind = mate_hash[read.query_name]
             del mate_hash[read.query_name]
-            locations = (start, end, read.reference_start, read.reference_end)
-            if None in locations:
+            read_and_mate_locations = (
+                read.query_name,
+                ind,
+                read_index,
+                start,
+                end,
+                read.reference_start,
+                read.reference_end
+            )
+            if None in read_and_mate_locations:
                 continue
-            key = '%d-%d-%d-%d' % locations
-            location_dict[key] = (ind, read_index)
+            csv_writer.writerow(read_and_mate_locations)
         else:
             mate_hash[read.query_name] = (
                 read.reference_start, read.reference_end, read_index
             )
-    with open(output_json, 'w') as f:
-        json.dump(location_dict, f, indent=2)
+    output_file.close()
 
 
 if __name__ == '__main__':
     accession = 'SRR10971381'
     #accession = 'SRR17309643'
     input_bam = 'data/%s/%s.bam' % (accession, accession)
-    output_json = 'data/%s/%s.json' % (accession, accession)
-    extract_positions_from_bam(input_bam, output_json)
+    output_csv = 'data/%s/%s.csv' % (accession, accession)
+    extract_positions_from_bam(input_bam, output_csv)
