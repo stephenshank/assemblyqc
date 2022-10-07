@@ -1,0 +1,12 @@
+{
+  "name": "assemblyqc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:stephenshank/assemblyqc",
+  "author": "Stephen Shank <sshank314@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "crossfilter2": "^1.5.4",
+    "d3-dsv": "^3.0.1"
+  }
+}
