@@ -1,6 +1,9 @@
 *.pyc
+.snakemake
 __pycache__
 data
+input
+output
 .DS_Store
 yarn-error.log
 node_modules
