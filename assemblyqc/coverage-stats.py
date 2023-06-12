@@ -42,7 +42,8 @@ def extract_pileup_line(line):
 
 
 if __name__ == '__main__':
-    input_coverage = 'data/candida.bed'
-    output_contig_stats = 'data/candida.json'
-    input_reference = 'data/candida.fasta'
+    organism = 'ebola'
+    input_coverage = f'data/{organism}.bed'
+    output_contig_stats = f'data/{organism}.json'
+    input_reference = f'data/{organism}.fasta'
     get_contig_boundaries(input_coverage, input_reference, output_contig_stats)
