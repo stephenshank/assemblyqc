@@ -42,6 +42,22 @@ def extract_bedcov_line(line):
     return chromosome, start, end, coverage
 
 
+def calculate_n_and_l(contig_stats, percent):
+    lengths = []
+    fraction = percent / 100
+    for contig in contig_stats['contigs']:
+        lengths.append(contig[1] - contig[0])
+    lengths = sorted(lengths, reverse=True)
+    total_length = 0
+    target_length = fraction * contig_stats['length']
+    for i, length in enumerate(lengths):
+        total_length += length
+        if total_length >= target_length:
+            return length, i + 1
+    return None, None
+
+
+
 DESCRIPTION = """
 regal - Read-based Evaluation of Genome Assemblies Library
 By Stephen D. Shank, Ph. D.
