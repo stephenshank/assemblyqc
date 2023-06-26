@@ -57,6 +57,16 @@ def calculate_n_and_l(contig_stats, percent):
     return None, None
 
 
+def regal(coverage, assembly, percentiles=None):
+    output = get_contig_boundaries(coverage, assembly)
+    if percentiles:
+        for chromosome, stats in output.items():
+            for percentile in percentiles:
+                n, l = calculate_n_and_l(stats, percentile)
+                stats['n%d' % percentile] = n
+                stats['l%d' % percentile] = l
+    return output
+
 
 DESCRIPTION = """
 regal - Read-based Evaluation of Genome Assemblies Library
@@ -97,10 +107,20 @@ def regal_cli():
         dest='output',
         required=True
     )
+    parser.add_argument(
+        '-p',
+        '--percentiles',
+        help='percentiles (comma delimited, e.g. 50,95)',
+        dest='percentiles'
+    )
     args = parser.parse_args()
-    regal = get_contig_boundaries(args.coverage, args.assembly)
+    if args.percentiles:
+        percentiles = [int(i) for i in args.percentiles.split(',')]
+    else:
+        percentiles = None
+    output = regal(args.coverage, args.assembly, percentiles)
     with open(args.output, 'w') as json_file:
-        json.dump(regal, json_file, indent=2)
+        json.dump(output, json_file, indent=2)
 
 
 if __name__ == '__main__':
