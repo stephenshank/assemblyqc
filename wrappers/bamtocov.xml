@@ -29,7 +29,7 @@ Calculate coverage from a BAM file.
 
 **Outputs**
 
-This tool generates BED file containing coverage information from the associated BAM file.
+This tool generates a BED file containing coverage information from the associated BAM file.
     ]]>
     </help>
     <citations>
