@@ -1,0 +1,29 @@
+package:
+  name: assemblyqc
+  version: '0.0.1'
+
+build:
+  script: python -m pip install --no-deps --ignore-installed .
+  number: 1
+
+source:
+  path: ..
+
+requirements:
+  host:
+    - python >=3.6.7
+    - setuptools
+  run:
+    - python >=3.6.7
+    - biopython >=1.76
+test:
+  commands:
+    - regal -h
+  imports:
+    - assemblyqc
+
+about:
+  home: https://github.com/stephenshank/assemblyqc
+  license: MIT
+  license_file: LICENSE
+  summary: 'Quality control of assemblies'
