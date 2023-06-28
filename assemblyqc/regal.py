@@ -1,5 +1,6 @@
 import json
 import sys
+import csv
 import argparse
 
 from Bio import SeqIO
@@ -57,7 +58,7 @@ def calculate_n_and_l(contig_stats, percent):
     return None, None
 
 
-def regal(coverage, assembly, percentiles=None):
+def regal(coverage, assembly, percentiles=None, uncovered_bed=None):
     output = get_contig_boundaries(coverage, assembly)
     if percentiles:
         for chromosome, stats in output.items():
@@ -66,6 +67,29 @@ def regal(coverage, assembly, percentiles=None):
                 stats['n%d' % percentile] = n
                 stats['l%d' % percentile] = l
     return output
+
+
+def uncovered_bed(regal, output_bed):
+    bed_file = open(output_bed, 'w')
+    bed_writer = csv.writer(bed_file, delimiter='\t')
+    for chromosome, stats in regal.items():
+        length = stats['length']
+        for i, contig in enumerate(stats['contigs']):
+            is_last = i == len(stats['contigs']) - 1
+            if i == 0 and contig[0] != 0:
+                # first contig with leading gap
+                bed_writer.writerow([chromosome, 0, contig[0] - 1])
+            elif is_last and contig[1] != length:
+                # last contig with trailing gap
+                row = [chromosome, last_contig[1] + 1, contig[0] - 1]
+                bed_writer.writerow(row)
+                bed_writer.writerow([chromosome, contig[1] + 1, length])
+            elif contig[0] != 0 and contig[1] != length:
+                # intermediate contig
+                row = [chromosome, last_contig[1] + 1, contig[0] - 1]
+                bed_writer.writerow(row)
+            last_contig = contig
+    bed_file.close()
 
 
 DESCRIPTION = """
@@ -124,4 +148,6 @@ def regal_cli():
 
 
 if __name__ == '__main__':
-    regal_cli()
+    with open('data/contig_stats_2.json') as json_file:
+        regal = json.load(json_file)
+    uncovered_bed(regal, 'data/uncovered.bed')
