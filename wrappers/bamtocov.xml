@@ -1,4 +1,4 @@
-<tool id="bamtocov" name="BAM to Coverage" version="1.0" profile="23.0">
+<tool id="bamtocov" name="BAM to Coverage" version="1.0" profile="21.05">
     <description>Get a BED file of coverage from a BAM</description>
     <requirements>
         <requirement type="package" version="2.7.0">bamtocov</requirement>

@@ -1,4 +1,4 @@
-<tool id="regal" name="Read-based evaluation of Genome Assemblies" version="1.0" profile="23.0">
+<tool id="regal" name="Read-based evaluation of Genome Assemblies" version="1.0" profile="21.05">
     <description>Assembly statistics from a BED coverage file</description>
     <requirements>
         <requirement type="package" version="0.0.1">assemblyqc</requirement>
@@ -36,8 +36,6 @@ reads that were used to produce a given assembly.
     ]]>
     </help>
     <citations>
-        <citation type="bibtex">
-        </citation>
     </citations>
 </tool>
 
