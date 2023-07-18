@@ -1,6 +1,6 @@
 package:
   name: assemblyqc
-  version: '0.0.1'
+  version: '0.0.2'
 
 build:
   script: python -m pip install --no-deps --ignore-installed .
@@ -16,9 +16,13 @@ requirements:
   run:
     - python >=3.6.7
     - biopython >=1.76
+    - xmltodict==0.13.0
 test:
   commands:
     - regal -h
+    - dss_xml_cleaner -h
+    - xml_to_json -h
+    - dss_json_cleaner -h
   imports:
     - assemblyqc
 
