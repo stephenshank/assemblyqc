@@ -7,12 +7,17 @@ def dss_json_cleaner(input_json, output_json):
     with open(input_json) as input_json_file:
         raw = json.load(input_json_file)
     dss = raw['WrapperForJSONConversion']['DocumentSummarySet']
-    clean = {
-        'DocumentSummarySet': sum([
-            dss[i]['DocumentSummary']
-            for i in range(len(dss))
-        ], [])
-    }
+    if type(dss) == list:
+        clean = {
+            'DocumentSummarySet': sum([
+                dss[i]['DocumentSummary']
+                for i in range(len(dss))
+            ], [])
+        }
+    else:
+        clean = {
+            'DocumentSummarySet': dss['DocumentSummary']
+        }
     with open(output_json, 'w') as output_json_file:
         json.dump(clean, output_json_file)
 
