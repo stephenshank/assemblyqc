@@ -1,17 +1,30 @@
 import sys
 import argparse
+import warnings
+
+
+empty_xml = '''<WrapperForJSONConversion>
+    <DocumentSummarySet>
+        <DocumentSummary>
+        </DocumentSummary>
+    </DocumentSummarySet>
+</WrapperForJSONConversion>'''
 
 
 def dss_xml_cleaner(input_xml, output_xml):
     xml_input_file = open(input_xml)
     xml_output_file = open(output_xml, 'w')
-    for i in range(2):
-        line = next(xml_input_file) 
-        xml_output_file.write(line)
-    xml_output_file.write('<WrapperForJSONConversion>\n')
-    for line in xml_input_file:
-        xml_output_file.write('  '+line)
-    xml_output_file.write('</WrapperForJSONConversion>\n')
+    try:
+        for _ in range(2):
+            line = next(xml_input_file)
+            xml_output_file.write(line)
+        xml_output_file.write('<WrapperForJSONConversion>\n')
+        for line in xml_input_file:
+            xml_output_file.write('  '+line)
+        xml_output_file.write('</WrapperForJSONConversion>\n')
+    except StopIteration:
+        warnings.warn('proceeding as though XML file were empty')
+        xml_output_file.write(empty_xml)
     xml_input_file.close()
     xml_output_file.close()
 
